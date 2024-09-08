@@ -86,7 +86,7 @@ To install `zquery`, ensure you have Rust's package manager, Cargo, installed. Y
 
 ## Contributing/License
 
-`zquery` is licensed under the MIT License. `zquery` is a work in progress so contributiosn are welcome with the understanding that things might be unstable and breaking and that this is a big experiment and that I have a vision I am working towards.
+`zquery` is licensed under the MIT License. `zquery` is a work in progress so contributions are welcome with the understanding that things might be unstable and breaking and that this is a big experiment and that I have a vision I am working towards.
 
 ## Roadmap 
 
