@@ -31,6 +31,7 @@ use serde_json::Value;
 use std::process::Command;
 use std::sync::Arc;
 use std::process::Stdio;
+use std::io::Write;
 
 /// Ps function that returns a list of processes, by default returns local processes, pass in a host to get processes from a remote machine.
 ///
