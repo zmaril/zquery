@@ -1,11 +1,14 @@
 use rustyline::error::ReadlineError;
 use rustyline::DefaultEditor;
 use datafusion::execution::context::SessionContext;
+use datafusion_expr::ScalarUDF;
 
 use crate::commands::*;
 
 async fn set_up() -> std::io::Result<SessionContext> {
     let ctx = SessionContext::new();
+    let host = ScalarUDF::from(Host::new());
+    ctx.register_udf(host.clone());
     ctx.register_udtf("ps", ps_table_func());
     ctx.register_udtf("uptime", uptime_table_func());
     ctx.register_udtf("who", who_table_func());
