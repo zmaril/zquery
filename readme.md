@@ -86,3 +86,4 @@ With more to come soon!
 - [ ] Set up a discord.
 - [ ] Figure out how to get streaming working with datafusion. 
 - [ ] Get bpftrace working ala [`bpfquery`](https://bpfquery.com).
+- [ ] Figure out a better way than `jq` to handle the output of `jc` for converting from JSON to NDJSON.Or, hey, don't convert from JSON to NDJSON at all! Just have arrow parse the JSON directly somehow.

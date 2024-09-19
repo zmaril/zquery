@@ -3,10 +3,29 @@ use rustyline::DefaultEditor;
 use datafusion::execution::context::SessionContext;
 use crate::ps::*;
 use std::sync::Arc;
+use crate::commandtable::*;
+use datafusion::arrow::datatypes::{Schema, Field, DataType};
 
 async fn set_up() -> std::io::Result<SessionContext> {
     let ctx = SessionContext::new();
     ctx.register_udtf("ps", Arc::new(ProcessTableFunc {}));
+    ctx.register_udtf("ps2", Arc::new(CommandTableFunc {
+        command: vec!["ps".to_string(), "aux".to_string()],
+        jc_parser: "ps".to_string(),
+        schema: Arc::new(Schema::new(vec![
+            Field::new("user", DataType::Utf8, true),
+            Field::new("pid", DataType::Int64, true),
+            Field::new("vsz", DataType::Int64, true),
+            Field::new("rss", DataType::Int64, true),
+            Field::new("tt", DataType::Utf8, true),
+            Field::new("stat", DataType::Utf8, true),
+            Field::new("started", DataType::Utf8, true),
+            Field::new("time", DataType::Utf8, true),
+            Field::new("command", DataType::Utf8, true),
+            Field::new("cpu_percent", DataType::Float64, true),
+            Field::new("mem_percent", DataType::Float64, true),
+        ])),
+    }));
     Ok(ctx)
 }
 
