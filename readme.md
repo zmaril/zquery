@@ -10,6 +10,7 @@ $ zquery
 +---------------+-------------+-------------+-----+-------+---------+------+----------+-----+
 | /sbin/launchd | 0.0         | 0.0         | 1   | 15664 | 24Aug24 | Ss   | 34:45.79 |     |
 +---------------+-------------+-------------+-----+-------+---------+------+----------+-----+
+
 >> SELECT left(command,70) as cmd, cpu_percent FROM ps() WHERE cpu_percent > 0.5 order by cpu_percent desc, cmd;
 +------------------------------------------------------------------------+-------------+
 | cmd                                                                    | cpu_percent |
@@ -29,17 +30,35 @@ $ zquery
 | /usr/sbin/cfprefsd daemon                                              | 0.6         |
 +------------------------------------------------------------------------+-------------+
 
-$ zquery -e "SELECT p.command, p.cpu_usage, u.info FROM ps() as p JOIN whoami() as u ON p.user = u.user"
-+-----------------------------------------------------------------------------------+
-| command  | cpu_usage | info |
-|-----------------------------------------------------------------------------------|
-| /usr/lib/systemd/systemd --user | 0.0 | root |
-| /usr/lib/systemd/systemd --system | 0.0 | root |
-| /usr/lib/systemd/systemd-networkd | 0.0 | root |
-| /usr/lib/systemd/systemd-resolved | 0.0 | root |
-| /usr/lib/systemd/systemd-timesyncd | 0.0 | root |
-| /usr/lib/systemd/systemd-logind | 0.0 | root |
-+-----------------------------------------------------------------------------------+
+>> select * from uptime();
++-----------------+-------+---------+---------+----------+-----------+-------------+-------------+-------------+--------------+----------------+----------------------+
+| uptime          | users | load_1m | load_5m | load_15m | time_hour | time_minute | time_second | uptime_days | uptime_hours | uptime_minutes | uptime_total_seconds |
++-----------------+-------+---------+---------+----------+-----------+-------------+-------------+-------------+--------------+----------------+----------------------+
+| 25 days, 19 hrs | 2     | 1.85    | 2.32    | 2.4      | 4         | 56          |             | 25          | 0            | 0              | 2160000              |
++-----------------+-------+---------+---------+----------+-----------+-------------+-------------+-------------+--------------+----------------+----------------------+
+
+
+//n.b. We aren't parsing time/date yet.
+>> select * from who() order by time
++-----------+--------+---------+--------------+-------+
+| user      | event  | tty     | time         | epoch |
++-----------+--------+---------+--------------+-------+
+|           | reboot |         | Aug 24       |       |
+| zackmaril |        | console | Aug 24 09:57 |       |
+| zackmaril |        | ttys009 | Aug 25 09:57 |       |
+| zackmaril |        | ttys004 | Aug 26 08:39 |       |
+| zackmaril |        | ttys010 | Aug 27 09:52 |       |
+| zackmaril |        | ttys003 | Aug 27 18:33 |       |
+| zackmaril |        | ttys021 | Aug 30 07:46 |       |
+| zackmaril |        | ttys022 | Aug 30 07:56 |       |
+| zackmaril |        | ttys002 | Sep 1 03:59  |       |
+| zackmaril |        | ttys007 | Sep 12 23:10 |       |
+| zackmaril |        | ttys000 | Sep 19 03:05 |       |
+| zackmaril |        | ttys001 | Sep 19 04:59 |       |
+| zackmaril |        | ttys018 | Sep 4 07:59  |       |
+| zackmaril |        | ttys025 | Sep 6 17:08  |       |
+| zackmaril |        | ttys020 | Sep 8 18:58  |       |
++-----------+--------+---------+--------------+-------+
 ```
 
 
@@ -65,6 +84,8 @@ To install `zquery`, ensure you have Rust's package manager, Cargo, installed. Y
 `zquery` currently supports the following commands:
 
 - `ps()` - Returns a table of processes.
+- `uptime()` - Returns a row of uptime information.
+- `who()` - Returns a table of who is and was on the system.
 
 With more to come soon! 
 

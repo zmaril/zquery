@@ -1,6 +1,6 @@
 mod engine;
-mod ps;
 mod commandtable;
+mod commands;
 
 use dotenv::dotenv;
 use engine::{cli_eval, cli_repl};

@@ -13,7 +13,6 @@ use datafusion::arrow::json::ReaderBuilder;
 use std::io::Cursor;
 use datafusion::arrow::record_batch::RecordBatch;
 use datafusion::datasource::function::TableFunctionImpl;
-use datafusion::arrow::datatypes::Field;
 
 /// Generic CommandTable that runs a command, pipes its output into `jc`, and provides the data as RecordBatches.
 
@@ -22,10 +21,11 @@ pub struct CommandTable {
     command: Vec<String>,
     jc_parser: String,
     schema: SchemaRef,
+    is_result_array: bool,
 }
 
 impl CommandTable {
-    fn run_command(command: &Vec<String>, jc_parser: &str) -> std::io::Result<String> {
+    fn run_command(command: &[String], jc_parser: &str) -> std::io::Result<String> {
         // Run the initial command
         let mut cmd = Command::new(&command[0]);
         if command.len() > 1 {
@@ -107,12 +107,14 @@ impl TableProvider for CommandTable {
         _limit: Option<usize>,
     ) -> Result<Arc<dyn ExecutionPlan>> {
         // Run the command and parse the output
-        let output = Self::run_command(&self.command, &self.jc_parser)
+        let mut output = Self::run_command(&self.command, &self.jc_parser)
             .map_err(|e| DataFusionError::Execution(format!("Failed to execute command: {}", e)))?;
 
-        // convert json to ndjson
-        let ndjson = json_to_ndjson(&output);
-        let cursor = Cursor::new(ndjson);
+        if self.is_result_array {
+            output = json_to_ndjson(&output);
+        }
+
+        let cursor = Cursor::new(output);
         let reader = ReaderBuilder::new(self.schema.clone())
             .build(cursor)
             .map_err(|e| DataFusionError::Execution(format!("Failed to build JSON reader: {}", e)))?;
@@ -130,17 +132,19 @@ impl TableProvider for CommandTable {
 
 #[derive(Debug, Clone)]
 pub struct CommandTableFunc {
-    pub command: Vec<String>,
-    pub jc_parser: String,
+    pub command: Vec<&'static str>,
+    pub jc_parser: &'static str,
     pub schema: SchemaRef,
+    pub is_result_array: bool,
 }
 
 impl TableFunctionImpl for CommandTableFunc {
     fn call(&self, _exprs: &[Expr]) -> Result<Arc<dyn TableProvider>> {
         let table = CommandTable {
-            command: self.command.clone(),
-            jc_parser: self.jc_parser.clone(),
+            command: self.command.iter().map(|s| s.to_string()).collect(),
+            jc_parser: self.jc_parser.to_string(),
             schema: self.schema.clone(),
+            is_result_array: self.is_result_array,
         };
         Ok(Arc::new(table))
     }
