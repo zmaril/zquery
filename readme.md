@@ -1,7 +1,5 @@
 # zquery
 
-*Tired of writing joins by hand in bash? Try `zquery` today!*
-
 `zquery` is a tool for running SQL queries on the output of various Unix tools. It lets you query the output of various Unix tools in a way that's easy to work with. It's powered by [Apache DataFusion](https://datafusion.apache.org/) and [jc](https://github.com/kellyjonbrazil/jc) which means it works way better than it has any right to.
 
 ```
