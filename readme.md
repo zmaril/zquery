@@ -114,6 +114,12 @@ For example:
 
 Currently, `zquery` supports the `SELECT` statement in general. Nested, windows, joins, aggregates are all supported. Datafusion is great! Support for `CREATE TABLE` with `INSERT`, `UPDATE`, `DELETE` and `DROP` statements is planned via a local sqlite3 database. Additionally, support for streaming sql is in the works. 
 
+## Limitations 
+
+* Currently it relies on short names in your `ssh` config for simplicity of using `host('server_name')`. If you want to use `zquery` with your own ssh config you can do so but you'll have to make sure your config file has all the info ssh2 needs to get into the server.
+* Additionally, `zquery` experts there to be an `id_rsa` file in your `~/.ssh` directory. It shouldn't be too hard to add support for other key types or other methods of authentication but that isn't done yet.
+* The ssh commands are implemented as user defined table functions in datafusion. This is convenient in some ways, but a limitation right now is that it's not possible to pass columns as arguments to these functions. So any arguments to the functions need to be literals. This is a work in progress, and may be possible in the future once I learn more about how datafusion works.
+
 ## Contributing/License
 
 `zquery` is licensed under the MIT License. `zquery` is a work in progress so contributions are welcome with the understanding that things might be unstable and breaking and that this is a big experiment with a vision I am working towards. So if a PR languishes or is not accepted at the moment, that's because I'm one person focusing on trying to get the vision down. 

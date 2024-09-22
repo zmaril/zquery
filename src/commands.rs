@@ -80,7 +80,6 @@ pub fn uptime_table_func() -> Arc<CommandTableFunc> {
     })
 }
 
-//[{"user":"zackmaril","tty":"console","time":"Aug 24 09:57","epoch":null},{"user":"zackmaril","tty":"ttys000","time":"Sep 19 03:05","epoch":null}]
 pub fn who_table_func() -> Arc<CommandTableFunc> {
     Arc::new(CommandTableFunc {
         command: vec!["who", "-a"],

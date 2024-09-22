@@ -18,7 +18,6 @@ use std::net::TcpStream;
 use std::path::Path;
 use std::process::{Command, Stdio};
 use std::sync::Arc;
-use datafusion::scalar::ScalarValue;
 
 /// Generic CommandTable that runs a command, pipes its output into `jc`, and provides the data as RecordBatches.
 
@@ -39,8 +38,11 @@ impl CommandTable {
         args: &[String],
         jc_parser: &str,
     ) -> std::io::Result<String> {
+
+        let home = std::env::var("HOME").unwrap();
+
         let mut reader = BufReader::new(
-            File::open(Path::new("/Users/zackmaril/.ssh/config"))
+            File::open(Path::new(&format!("{}/.ssh/config", home)))
                 .expect("Could not open configuration file"),
         );
 
@@ -61,8 +63,9 @@ impl CommandTable {
 
         session.set_tcp_stream(tcp);
         session.handshake().unwrap();
+        // resolve the home directory
         session
-            .userauth_pubkey_file(&user, None, Path::new("/Users/zackmaril/.ssh/id_rsa"), None)
+            .userauth_pubkey_file(&user, None, Path::new(&format!("{}/.ssh/{}", home, "id_rsa")), None)
             .unwrap();
 
         let mut channel = session.channel_session().unwrap();
