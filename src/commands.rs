@@ -1,13 +1,10 @@
 use crate::commandtable::*;
 use datafusion::arrow::datatypes::{DataType, Field, Schema};
-use datafusion::common::cast::as_int64_array;
-use datafusion::physical_plan::functions::columnar_values_to_array;
 use std::sync::Arc;
-use datafusion::arrow::array::{ArrayRef, Int64Array, StringArray};
 use datafusion::common::Result;
 
 use std::any::Any;
-use datafusion_expr::{col, ColumnarValue, Signature, Volatility};
+use datafusion_expr::{ColumnarValue, Signature, Volatility};
 use datafusion_expr::ScalarUDFImpl;
 
 #[derive(Debug)]
@@ -94,6 +91,88 @@ pub fn who_table_func() -> Arc<CommandTableFunc> {
             Field::new("tty", DataType::Utf8, true),
             Field::new("time", DataType::Utf8, true), // Convert this to a date somehow
             Field::new("epoch", DataType::Int64, true),
+        ])),
+        is_result_array: true,
+    })
+}
+
+pub fn ls_table_func() -> Arc<CommandTableFunc> {
+    Arc::new(CommandTableFunc {
+        command: vec!["ls", "-lah"],
+        jc_parser: "ls",
+        schema: Arc::new(Schema::new(vec![
+            Field::new("filename", DataType::Utf8, true),
+            Field::new("flags", DataType::Utf8, true),
+            Field::new("links", DataType::Int64, true),
+            Field::new("owner", DataType::Utf8, true),
+            Field::new("group", DataType::Utf8, true),
+            Field::new("size", DataType::Int64, true),
+            Field::new("date", DataType::Utf8, true),
+        ])),
+        is_result_array: true,
+    })
+}
+
+pub fn stat_table_func() -> Arc<CommandTableFunc> {
+    Arc::new(CommandTableFunc {
+        command: vec!["stat"],
+        jc_parser: "stat",
+        schema: Arc::new(Schema::new(vec![
+            Field::new("file", DataType::Utf8, true),
+            Field::new("unix_device", DataType::Int64, true),
+            Field::new("inode", DataType::Int64, true),
+            Field::new("flags", DataType::Utf8, true),
+            Field::new("links", DataType::Int64, true),
+            Field::new("user", DataType::Utf8, true),
+            Field::new("group", DataType::Utf8, true),
+            Field::new("rdev", DataType::Int64, true),
+            Field::new("size", DataType::Int64, true),
+            Field::new("access_time", DataType::Utf8, true),
+            Field::new("modify_time", DataType::Utf8, true),
+            Field::new("change_time", DataType::Utf8, true),
+            Field::new("birth_time", DataType::Utf8, true),
+            Field::new("block_size", DataType::Int64, true),
+            Field::new("blocks", DataType::Int64, true),
+            Field::new("unix_flags", DataType::Utf8, true),
+            Field::new("access_time_epoch", DataType::Int64, true),
+            Field::new("access_time_epoch_utc", DataType::Int64, true),
+            Field::new("modify_time_epoch", DataType::Int64, true),
+            Field::new("modify_time_epoch_utc", DataType::Int64, true),
+            Field::new("change_time_epoch", DataType::Int64, true),
+            Field::new("change_time_epoch_utc", DataType::Int64, true),
+            Field::new("birth_time_epoch", DataType::Int64, true),
+            Field::new("birth_time_epoch_utc", DataType::Int64, true),
+        ])),
+        is_result_array: true,
+    })
+}
+
+pub fn df_table_func() -> Arc<CommandTableFunc> {
+    Arc::new(CommandTableFunc {
+        command: vec!["df", "-h"],
+        jc_parser: "df",
+        schema: Arc::new(Schema::new(vec![
+            Field::new("filesystem", DataType::Utf8, true),
+            Field::new("512_blocks", DataType::Int64, true),
+            Field::new("used", DataType::Int64, true),
+            Field::new("available", DataType::Int64, true),
+            Field::new("iused", DataType::Int64, true),
+            Field::new("ifree", DataType::Int64, true),
+            Field::new("mounted_on", DataType::Utf8, true),
+            Field::new("capacity_percent", DataType::Int64, true),
+            Field::new("iused_percent", DataType::Int64, true),
+        ])),
+        is_result_array: true,
+    })
+}
+
+pub fn du_table_func() -> Arc<CommandTableFunc> {
+    Arc::new(CommandTableFunc {
+        command: vec!["du", "-h"],
+        jc_parser: "du",
+        schema: Arc::new(Schema::new(vec![
+            Field::new("name", DataType::Utf8, true),
+            Field::new("size", DataType::Int64, true),
         ])),
         is_result_array: true,
     })

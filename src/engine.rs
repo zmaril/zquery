@@ -12,6 +12,10 @@ async fn set_up() -> std::io::Result<SessionContext> {
     ctx.register_udtf("ps", ps_table_func());
     ctx.register_udtf("uptime", uptime_table_func());
     ctx.register_udtf("who", who_table_func());
+    ctx.register_udtf("ls", ls_table_func());
+    ctx.register_udtf("stat", stat_table_func());
+    ctx.register_udtf("df", df_table_func());
+    ctx.register_udtf("du", du_table_func());
     Ok(ctx)
 }
 
@@ -22,7 +26,6 @@ async fn eval_sql(ctx: &SessionContext, sql: String) -> std::io::Result<()> {
             df.show().await.unwrap();
         }
         Err(e) => {
-            dbg!(&e);
             println!("Error: {:?}", e);
         }
     }
