@@ -16,6 +16,14 @@ async fn set_up() -> std::io::Result<SessionContext> {
     ctx.register_udtf("stat", stat_table_func());
     ctx.register_udtf("df", df_table_func());
     ctx.register_udtf("du", du_table_func());
+    ctx.register_udtf("blkid", blkid_table_func());
+    ctx.register_udtf("env", env_table_func());
+    ctx.register_udtf("date", date_table_func());
+    ctx.register_udtf("dir", dir_table_func());
+    ctx.register_udtf("dpkg_list", dpkg_list_table_func());
+    ctx.register_udtf("file", file_table_func());
+    ctx.register_udtf("find", find_table_func());
+    ctx.register_udtf("free", free_table_func());
     Ok(ctx)
 }
 

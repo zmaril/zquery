@@ -98,8 +98,13 @@ To install `zquery`, ensure you have Rust's package manager, Cargo, installed. Y
 - `stat('.')` - Returns a table of file information for the given path.
 - `df('.')` - Returns a table of disk space information.
 - `du('.')` - Returns a table of disk usage information.
-
-With more to come soon!
+- `env()` - Returns a table of environment variables.
+- `date()` - Returns a table of date and time information.
+- `dir('.')` - Returns a table of directory information. (Windows only)
+- `dpkg_list()` - Returns a table of dpkg packages. 
+- `file('.')` - Returns a table of file information. 
+- `find('.')` - Returns a table of files and directories.  (TODO: broken)
+- `free()` - Returns a table of free memory information.
 
 To query remote servers, you can use the `host()` function as the first argument to any of the above commands.
 

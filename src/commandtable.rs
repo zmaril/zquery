@@ -100,6 +100,7 @@ impl CommandTable {
         // Pipe the output into jc
         let mut jc_cmd = Command::new("jc");
         jc_cmd.arg(format!("--{}", jc_parser));
+        jc_cmd.arg("-q");
         jc_cmd.stdin(Stdio::piped());
         jc_cmd.stdout(Stdio::piped());
         let mut jc_child = jc_cmd.spawn()?;
